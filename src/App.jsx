@@ -3,10 +3,27 @@ import GameBoard from './components/GameBoard';
 import Player from './components/Player';
 
 function App() {
+  const [gameTurns, setGameTurns] = useState([]);
   const [activePlayer, setActivePlayer] = useState('X');
 
-  const handlePlayerGame = () => {
+  const handlePlayerGame = (rowIndex, colIndex) => {
     setActivePlayer((curActivePlayer) => (curActivePlayer === 'X' ? 'O' : 'X'));
+
+    setGameTurns((prevGameTurns) => {
+      let currentPlayer = 'X';
+
+      if (prevGameTurns.length > 0 && prevGameTurns[0].player === 'X') {
+        currentPlayer = 'O';
+      }
+
+      // in immutable way, best practice
+      const updatedGameTurns = [
+        { square: { row: rowIndex, col: colIndex }, player: currentPlayer },
+        ...prevGameTurns,
+      ];
+
+      return updatedGameTurns;
+    });
   };
 
   return (
@@ -25,10 +42,7 @@ function App() {
           />
         </ol>
 
-        <GameBoard
-          playerSymbol={activePlayer}
-          onSelectSquare={handlePlayerGame}
-        />
+        <GameBoard turns={gameTurns} onSelectSquare={handlePlayerGame} />
       </div>
     </main>
   );

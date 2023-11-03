@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const initialGameBoard = [
   [null, null, null],
@@ -6,25 +6,34 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
-const GameBoard = ({ playerSymbol, onSelectSquare }) => {
-  const [gameBoard, setGameBoard] = useState(initialGameBoard);
+const GameBoard = ({ turns, onSelectSquare }) => {
+  let gameBoard = initialGameBoard;
 
-  const handleSelectSquare = (rowIndex, colIndex) => {
-    setGameBoard((prevGameBoard) => {
-      //  NOT RECOMMANDED, should updated in immutable way (by creating a new brand copie of the array)
-      // prevGameBoard[rowIndex][colIndex] = "X";
+  for (const turn of turns) {
+    const { square, player } = turn;
+    const { row, col } = square;
 
-      const updatedGameBoard = [
-        ...prevGameBoard.map((innerArray) => [...innerArray]),
-      ];
+    gameBoard[row][col] = player;
+  }
 
-      updatedGameBoard[rowIndex][colIndex] = playerSymbol;
+  // const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
-      return updatedGameBoard;
-    });
+  // const handleSelectSquare = (rowIndex, colIndex) => {
+  //   setGameBoard((prevGameBoard) => {
+  //     //  NOT RECOMMANDED, should updated in immutable way (by creating a new brand copie of the array)
+  //     // prevGameBoard[rowIndex][colIndex] = "X";
 
-    onSelectSquare();
-  };
+  //     const updatedGameBoard = [
+  //       ...prevGameBoard.map((innerArray) => [...innerArray]),
+  //     ];
+
+  //     updatedGameBoard[rowIndex][colIndex] = playerSymbol;
+
+  //     return updatedGameBoard;
+  //   });
+
+  //   onSelectSquare();
+  // };
 
   return (
     <ol id="game-board">
@@ -33,7 +42,7 @@ const GameBoard = ({ playerSymbol, onSelectSquare }) => {
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>
+                <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
                   {playerSymbol}
                 </button>
               </li>
