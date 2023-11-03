@@ -11,7 +11,8 @@ const GameBoard = () => {
 
   const handleSelectSquare = (rowIndex, colIndex) => {
     setGameBoard((prevGameBoard) => {
-      // prevGameBoard[rowIndex][colIndex] = "X"; NOT RECOMMANDED
+      //  NOT RECOMMANDED, should updated in immutable way (by creating a new brand copie of the array)
+      // prevGameBoard[rowIndex][colIndex] = "X";
 
       const updatedGameBoard = [
         ...prevGameBoard.map((innerArray) => [...innerArray]),
