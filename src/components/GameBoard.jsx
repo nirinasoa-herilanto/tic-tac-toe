@@ -1,25 +1,6 @@
 import React from 'react';
 
 const GameBoard = ({ turns, onSelectSquare }) => {
-  // const [gameBoard, setGameBoard] = useState(initialGameBoard);
-
-  // const handleSelectSquare = (rowIndex, colIndex) => {
-  //   setGameBoard((prevGameBoard) => {
-  //     //  NOT RECOMMANDED, should updated in immutable way (by creating a new brand copie of the array)
-  //     // prevGameBoard[rowIndex][colIndex] = "X";
-
-  //     const updatedGameBoard = [
-  //       ...prevGameBoard.map((innerArray) => [...innerArray]),
-  //     ];
-
-  //     updatedGameBoard[rowIndex][colIndex] = playerSymbol;
-
-  //     return updatedGameBoard;
-  //   });
-
-  //   onSelectSquare();
-  // };
-
   return (
     <ol id="game-board">
       {turns.map((row, rowIndex) => (

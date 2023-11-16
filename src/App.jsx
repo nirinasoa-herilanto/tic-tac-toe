@@ -6,11 +6,33 @@ import Log from './components/Log';
 import { WINNING_COMBINATIONS } from './utils/winning-combination';
 import GameOver from './components/GameOver';
 
-const initialGameBoard = [
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
+
+const PLAYERS = {
+  X: 'Player 1',
+  O: 'Player 2',
+};
+
+function deriveGameBoard(gameTurns) {
+  // will create a Deep copy of INITIAL_GAME_BOARD (independant)
+  // and the change in gameBoard will not affect INITIAL_GAME_BOARD
+  let gameBoard = [...INITIAL_GAME_BOARD.map((arr) => [...arr])];
+
+  // let gameBoard = INITIAL_GAME_BOARD.slice(); // will create a shallow copy
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  return gameBoard;
+}
 
 function derivedActivePlayer(gameTurns) {
   let currentPlayer = 'X';
@@ -22,28 +44,8 @@ function derivedActivePlayer(gameTurns) {
   return currentPlayer;
 }
 
-function App() {
-  const [players, setPlayers] = useState({
-    X: 'Player 1',
-    O: 'Player 2',
-  });
-
-  const [gameTurns, setGameTurns] = useState([]);
-  // const [activePlayer, setActivePlayer] = useState('X');
-
-  const activePlayer = derivedActivePlayer(gameTurns);
-
-  let gameBoard = [...initialGameBoard.map((arr) => [...arr])];
+function deriveWinner(gameBoard, players) {
   let winner = null;
-
-  const hasDraw = gameTurns.length === 9 && !winner;
-
-  for (const turn of gameTurns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
 
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
@@ -62,9 +64,20 @@ function App() {
     }
   }
 
-  const handlePlayerGame = (rowIndex, colIndex) => {
-    // setActivePlayer((curActivePlayer) => (curActivePlayer === 'X' ? 'O' : 'X'));
+  return winner;
+}
 
+function App() {
+  const [players, setPlayers] = useState(PLAYERS);
+
+  const [gameTurns, setGameTurns] = useState([]);
+
+  const activePlayer = derivedActivePlayer(gameTurns);
+  const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);
+  const hasDraw = gameTurns.length === 9 && !winner;
+
+  const handlePlayerGame = (rowIndex, colIndex) => {
     setGameTurns((prevGameTurns) => {
       const currentPlayer = derivedActivePlayer(prevGameTurns);
 
@@ -94,13 +107,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            name={'Player 1'}
+            name={PLAYERS.X}
             symbol={'X'}
             isActive={activePlayer === 'X'}
             onPlayerNameChange={handlePlayersChange}
           />
           <Player
-            name={'Player 2'}
+            name={PLAYERS.O}
             symbol={'O'}
             isActive={activePlayer === 'O'}
             onPlayerNameChange={handlePlayersChange}
