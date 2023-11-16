@@ -4,19 +4,27 @@ import GameBoard from './components/GameBoard';
 import Player from './components/Player';
 import Log from './components/Log';
 
+function derivedActivePlayer(gameTurns) {
+  let currentPlayer = 'X';
+
+  if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
+    currentPlayer = 'O';
+  }
+
+  return currentPlayer;
+}
+
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-  const [activePlayer, setActivePlayer] = useState('X');
+  // const [activePlayer, setActivePlayer] = useState('X');
+
+  const activePlayer = derivedActivePlayer(gameTurns);
 
   const handlePlayerGame = (rowIndex, colIndex) => {
-    setActivePlayer((curActivePlayer) => (curActivePlayer === 'X' ? 'O' : 'X'));
+    // setActivePlayer((curActivePlayer) => (curActivePlayer === 'X' ? 'O' : 'X'));
 
     setGameTurns((prevGameTurns) => {
-      let currentPlayer = 'X';
-
-      if (prevGameTurns.length > 0 && prevGameTurns[0].player === 'X') {
-        currentPlayer = 'O';
-      }
+      const currentPlayer = derivedActivePlayer(prevGameTurns);
 
       // in immutable way, best practice
       const updatedGameTurns = [
